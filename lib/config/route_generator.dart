@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lost_and_found/core/presentation/splash/pages/splash_screen.dart';
 import 'package:lost_and_found/core/presentation/tutorial/pages/tutorial_page.dart';
 import 'package:lost_and_found/features/authentication/presentation/pages/login_page.dart';
 import 'package:lost_and_found/features/authentication/presentation/pages/registration_page.dart';
@@ -13,6 +14,8 @@ import '../features/user/presentation/pages/change_password_page.dart';
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case '/splash':
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
       case '/tutorial':
         return MaterialPageRoute(builder: (_) => const InfoScreen());
       case '/':
@@ -25,7 +28,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) {
           bool isNewItemLost = true;
 
-          if (settings.arguments != null) {
+          if (settings.arguments != null && settings.arguments is InsertItemScreenArguments) {
             isNewItemLost = (settings.arguments as InsertItemScreenArguments).isNewItemLost;
           }
 

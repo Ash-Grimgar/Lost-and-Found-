@@ -1,74 +1,75 @@
 import 'package:flutter/material.dart';
 
-// Warm Cream & Muted Terracotta Palette (Warm Light Mode)
-// Background / Neutrals: Warm oatmeal / cream (#FAF9F6)
-// Primary / Structural: Muted terracotta / burnt orange (#C2410C / #DD6B20)
-// Text / Accents: Deep espresso brown (#292524)
+// ====================================================================
+// GLOBAL DESIGN SYSTEM & THEME TOKENS
+// ====================================================================
+
+// --- LIGHT MODE PALETTE ---
+// • Main Background: #FBF9F6 (Warm Ivory / Sand)
+// • Surface Cards / Container Fill: #FFFFFF (Clean White) or #F3EFEA (Soft Warm Grey Containers)
+// • Primary Accent / Brand Color: #52C46A (Vibrant Mint Green - CTA buttons, active state highlights, center + action)
+// • Secondary / Urgent Accent: #1E232A (Charcoal Dark - 'LOST' tags, active filter pills, search buttons)
+// • Text Primary: #1E232A (Deep Slate / Charcoal)
+// • Text Secondary: #9C8B7A (Warm Taupe / Muted Sand for subtitles, captions, borders)
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xFFC2410C), // Muted terracotta
+  primary: Color(0xFF52C46A), // Vibrant Mint Green
   onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFFFFDBC8), // Soft peach terracotta container
-  onPrimaryContainer: Color(0xFF380D00),
-  secondary: Color(0xFFDD6B20), // Burnt orange accent
+  primaryContainer: Color(0xFFD4F5DA),
+  onPrimaryContainer: Color(0xFF0F3E18),
+  secondary: Color(0xFF1E232A), // Charcoal Dark
   onSecondary: Color(0xFFFFFFFF),
-  secondaryContainer: Color(0xFFFBE4D8),
-  onSecondaryContainer: Color(0xFF3B1200),
-  tertiary: Color(0xFFB45309), // Warm amber-brown
+  secondaryContainer: Color(0xFFF3EFEA), // Soft warm grey container
+  onSecondaryContainer: Color(0xFF1E232A),
+  tertiary: Color(0xFF52C46A),
   onTertiary: Color(0xFFFFFFFF),
-  tertiaryContainer: Color(0xFFFED7AA),
-  onTertiaryContainer: Color(0xFF2E1500),
-  error: Color(0xFFBA1A1A),
+  tertiaryContainer: Color(0xFFE8F8EC),
+  onTertiaryContainer: Color(0xFF13421C),
+  error: Color(0xFFA61C32), // Crimson Red
   errorContainer: Color(0xFFFFDAD6),
   onError: Color(0xFFFFFFFF),
   onErrorContainer: Color(0xFF410002),
-  background: Color(0xFFFAF9F6), // Warm oatmeal / cream (60% background)
-  onBackground: Color(0xFF292524), // Deep espresso brown text
-  surface: Color(0xFFF5EFEB), // Warm structural surface (30% cards/containers)
-  onSurface: Color(0xFF292524), // Deep espresso brown text
-  surfaceVariant: Color(0xFFEAE2D9),
-  onSurfaceVariant: Color(0xFF52443D),
-  outline: Color(0xFFD7CCC8), // Soft warm border
-  onInverseSurface: Color(0xFFFAF9F6),
-  inverseSurface: Color(0xFF292524),
-  inversePrimary: Color(0xFFFB923C),
-  shadow: Color(0x1F292524),
-  surfaceTint: Color(0xFFC2410C),
-  outlineVariant: Color(0xFFE7E0D8),
-  scrim: Color(0xFF292524),
+  surface: Color(0xFFFFFFFF), // Clean White surface cards
+  onSurface: Color(0xFF1E232A), // Deep Slate / Charcoal
+  surfaceContainerHighest: Color(0xFFF3EFEA), // Soft Warm Grey Containers
+  outline: Color(0xFF9C8B7A), // Warm Taupe
+  outlineVariant: Color(0xFFE8E2D9),
+  shadow: Color(0x1F1E232A),
+  surfaceTint: Color(0xFF52C46A),
+  scrim: Color(0xFF1E232A),
 );
 
-// Warm Espresso & Terracotta Palette (Dark Mode)
+// --- DARK MODE PALETTE ---
+// • Main Background: #0B101D (Deep Midnight/Navy)
+// • Surface Cards / Container Fill: #131A2B (Elevated dark container color)
+// • Primary Accent / Brand Color: #63D279 (Soft Mint Green - active states, CTA buttons, active tabs, center + action)
+// • Secondary / Urgent Accent: #A61C32 (Crimson Red - 'LOST' tags, filter toggles, active badges)
+// • Text Primary: #FFFFFF (Pure White)
+// • Text Secondary: #8F99A8 (Muted Grey for subtitles, captions, input placeholders)
 const darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: Color(0xFFFB923C), // Warm glowing terracotta
-  onPrimary: Color(0xFF451A03),
-  primaryContainer: Color(0xFF7C2D12),
-  onPrimaryContainer: Color(0xFFFFDBC8),
-  secondary: Color(0xFFFDBA74),
-  onSecondary: Color(0xFF431407),
-  secondaryContainer: Color(0xFF6B2B0B),
-  onSecondaryContainer: Color(0xFFFED7AA),
-  tertiary: Color(0xFFFDE68A),
-  onTertiary: Color(0xFF451A00),
-  tertiaryContainer: Color(0xFF5A3E00),
-  onTertiaryContainer: Color(0xFFFFFBEB),
-  error: Color(0xFFFFB4AB),
-  errorContainer: Color(0xFF93000A),
-  onError: Color(0xFF690005),
+  primary: Color(0xFF63D279), // Soft Mint Green
+  onPrimary: Color(0xFF0B101D),
+  primaryContainer: Color(0xFF183823),
+  onPrimaryContainer: Color(0xFFB8F5C5),
+  secondary: Color(0xFFA61C32), // Crimson Red
+  onSecondary: Color(0xFFFFFFFF),
+  secondaryContainer: Color(0xFF1E283E),
+  onSecondaryContainer: Color(0xFFFFFFFF),
+  tertiary: Color(0xFF63D279),
+  onTertiary: Color(0xFF0B101D),
+  tertiaryContainer: Color(0xFF1B3B26),
+  onTertiaryContainer: Color(0xFFB8F5C5),
+  error: Color(0xFFA61C32),
+  errorContainer: Color(0xFF5A101C),
+  onError: Color(0xFFFFFFFF),
   onErrorContainer: Color(0xFFFFDAD6),
-  background: Color(0xFF1C1917), // Deep espresso slate
-  onBackground: Color(0xFFFAF9F6), // Warm cream text
-  surface: Color(0xFF292524), // Warm dark stone
-  onSurface: Color(0xFFFAF9F6),
-  surfaceVariant: Color(0xFF44403C),
-  onSurfaceVariant: Color(0xFFD6D3D1),
-  outline: Color(0xFF78716C),
-  onInverseSurface: Color(0xFF1C1917),
-  inverseSurface: Color(0xFFFAF9F6),
-  inversePrimary: Color(0xFFC2410C),
+  surface: Color(0xFF131A2B), // Elevated dark container color
+  onSurface: Color(0xFFFFFFFF), // Pure White
+  surfaceContainerHighest: Color(0xFF1D263B),
+  outline: Color(0xFF8F99A8), // Muted Grey
+  outlineVariant: Color(0xFF26334D),
   shadow: Color(0xFF000000),
-  surfaceTint: Color(0xFFFB923C),
-  outlineVariant: Color(0xFF57534E),
+  surfaceTint: Color(0xFF63D279),
   scrim: Color(0xFF000000),
 );

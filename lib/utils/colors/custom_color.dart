@@ -1,41 +1,56 @@
 import 'package:flutter/material.dart';
 
 CustomColors lightCustomColors = const CustomColors(
-  borderColorNotOpened: Color(0xFFC2410C),
-  borderColorOpened: Color(0xFFD7CCC8),
-  claimAcceptedStatusColor: Color(0xFF15803D),
+  borderColorNotOpened: Color(0xFF52C46A),
+  borderColorOpened: Color(0xFFE8E2D9),
+  claimAcceptedStatusColor: Color(0xFF52C46A),
   claimWaitingStatusColor: Color(0xFFD97706),
-  claimDeniedStatusColor: Color(0xFFB91C1C),
+  claimDeniedStatusColor: Color(0xFFA61C32),
   nClaimsColor: Color(0xFFD97706),
-  notOpenedColor: Color.fromRGBO(194, 65, 12, 0.15),
-  openedColor: Color(0xFFF5EFEB),
-  splashGreenColor: Color(0xFFC2410C),
-  splashGreyColor: Color(0xFF78716C),
-  secondaryTextColor: Color(0xFF78716C),
-  background2: Color(0xFFFAF9F6),
-  successSnackbar: Color(0xFF15803D),
+  notOpenedColor: Color(0x1F52C46A),
+  openedColor: Color(0xFFF3EFEA),
+  splashGreenColor: Color(0xFF52C46A),
+  splashGreyColor: Color(0xFF9C8B7A),
+  secondaryTextColor: Color(0xFF9C8B7A),
+  background2: Color(0xFFFFFFFF),
+  successSnackbar: Color(0xFF52C46A),
+  urgentAccent: Color(0xFF1E232A),
+  primaryAccent: Color(0xFF52C46A),
+  textPrimary: Color(0xFF1E232A),
+  mainBackground: Color(0xFFFBF9F6),
+  cardFill: Color(0xFFFFFFFF),
+  containerSoft: Color(0xFFF3EFEA),
+  cardBorderColor: Color(0xFFEDE8E1),
+  pillActiveBackground: Color(0xFF1E232A),
+  pillActiveText: Color(0xFFFFFFFF),
 );
 
 CustomColors darkCustomColors = const CustomColors(
-  borderColorNotOpened: Color(0xFFFB923C),
-  borderColorOpened: Color(0xFF57534E),
-  claimAcceptedStatusColor: Color(0xFF22C55E),
+  borderColorNotOpened: Color(0xFF63D279),
+  borderColorOpened: Color(0xFF1E283F),
+  claimAcceptedStatusColor: Color(0xFF63D279),
   claimWaitingStatusColor: Color(0xFFF59E0B),
-  claimDeniedStatusColor: Color(0xFFEF4444),
+  claimDeniedStatusColor: Color(0xFFA61C32),
   nClaimsColor: Color(0xFFF59E0B),
-  notOpenedColor: Color.fromRGBO(251, 146, 60, 0.2),
-  openedColor: Color(0xFF292524),
-  splashGreenColor: Color(0xFFFB923C),
-  splashGreyColor: Color(0xFFA8A29E),
-  secondaryTextColor: Color(0xFFD6D3D1),
-  background2: Color(0xFF1C1917),
-  successSnackbar: Color(0xFF22C55E),
+  notOpenedColor: Color(0x3363D279),
+  openedColor: Color(0xFF131A2B),
+  splashGreenColor: Color(0xFF63D279),
+  splashGreyColor: Color(0xFF8F99A8),
+  secondaryTextColor: Color(0xFF8F99A8),
+  background2: Color(0xFF131A2B),
+  successSnackbar: Color(0xFF63D279),
+  urgentAccent: Color(0xFFA61C32),
+  primaryAccent: Color(0xFF63D279),
+  textPrimary: Color(0xFFFFFFFF),
+  mainBackground: Color(0xFF0B101D),
+  cardFill: Color(0xFF131A2B),
+  containerSoft: Color(0xFF192238),
+  cardBorderColor: Color(0xFF1F2B45),
+  pillActiveBackground: Color(0xFFFFFFFF),
+  pillActiveText: Color(0xFF0B101D),
 );
 
-/// Defines a set of custom colors, each comprised of 4 complementary tones.
-///
-/// See also:
-///   * <https://m3.material.io/styles/color/the-color-system/custom-colors>
+/// Custom color extension for Lost&Found theme tokens
 @immutable
 class CustomColors extends ThemeExtension<CustomColors> {
   final Color? nClaimsColor;
@@ -52,38 +67,67 @@ class CustomColors extends ThemeExtension<CustomColors> {
   final Color? background2;
   final Color? successSnackbar;
 
-  const CustomColors(
-      {required this.nClaimsColor,
-      required this.claimWaitingStatusColor,
-      required this.claimAcceptedStatusColor,
-      required this.claimDeniedStatusColor,
-      required this.splashGreyColor,
-      required this.splashGreenColor,
-      required this.notOpenedColor,
-      required this.openedColor,
-      required this.borderColorOpened,
-      required this.secondaryTextColor,
-      required this.borderColorNotOpened,
-      required this.background2,
-      required this.successSnackbar});
+  // Design system tokens
+  final Color? urgentAccent;
+  final Color? primaryAccent;
+  final Color? textPrimary;
+  final Color? mainBackground;
+  final Color? cardFill;
+  final Color? containerSoft;
+  final Color? cardBorderColor;
+  final Color? pillActiveBackground;
+  final Color? pillActiveText;
+
+  const CustomColors({
+    required this.nClaimsColor,
+    required this.claimWaitingStatusColor,
+    required this.claimAcceptedStatusColor,
+    required this.claimDeniedStatusColor,
+    required this.splashGreyColor,
+    required this.splashGreenColor,
+    required this.notOpenedColor,
+    required this.openedColor,
+    required this.borderColorOpened,
+    required this.secondaryTextColor,
+    required this.borderColorNotOpened,
+    required this.background2,
+    required this.successSnackbar,
+    this.urgentAccent,
+    this.primaryAccent,
+    this.textPrimary,
+    this.mainBackground,
+    this.cardFill,
+    this.containerSoft,
+    this.cardBorderColor,
+    this.pillActiveBackground,
+    this.pillActiveText,
+  });
 
   @override
-  CustomColors copyWith(
-      {Color? nClaimsColor,
-      Color? claimWaitingStatusColor,
-      Color? claimAcceptedStatusColor,
-      Color? claimDeniedStatusColor,
-      Color? splashGreyColor,
-      Color? splashGreenColor,
-      Color? notOpenedColor,
-      Color? openedColor,
-      Color? borderColorOpened,
-      Color? secondaryTextColor,
-      Color? borderColorNotOpened,
-      Color? buttonPressed,
-      Color? statusBarDefaultColor,
-      Color? background2,
-      Color? successSnackbar}) {
+  CustomColors copyWith({
+    Color? nClaimsColor,
+    Color? claimWaitingStatusColor,
+    Color? claimAcceptedStatusColor,
+    Color? claimDeniedStatusColor,
+    Color? splashGreyColor,
+    Color? splashGreenColor,
+    Color? notOpenedColor,
+    Color? openedColor,
+    Color? borderColorOpened,
+    Color? secondaryTextColor,
+    Color? borderColorNotOpened,
+    Color? background2,
+    Color? successSnackbar,
+    Color? urgentAccent,
+    Color? primaryAccent,
+    Color? textPrimary,
+    Color? mainBackground,
+    Color? cardFill,
+    Color? containerSoft,
+    Color? cardBorderColor,
+    Color? pillActiveBackground,
+    Color? pillActiveText,
+  }) {
     return CustomColors(
       nClaimsColor: nClaimsColor ?? this.nClaimsColor,
       claimWaitingStatusColor: claimWaitingStatusColor ?? this.claimWaitingStatusColor,
@@ -98,6 +142,15 @@ class CustomColors extends ThemeExtension<CustomColors> {
       borderColorNotOpened: borderColorNotOpened ?? this.borderColorNotOpened,
       background2: background2 ?? this.background2,
       successSnackbar: successSnackbar ?? this.successSnackbar,
+      urgentAccent: urgentAccent ?? this.urgentAccent,
+      primaryAccent: primaryAccent ?? this.primaryAccent,
+      textPrimary: textPrimary ?? this.textPrimary,
+      mainBackground: mainBackground ?? this.mainBackground,
+      cardFill: cardFill ?? this.cardFill,
+      containerSoft: containerSoft ?? this.containerSoft,
+      cardBorderColor: cardBorderColor ?? this.cardBorderColor,
+      pillActiveBackground: pillActiveBackground ?? this.pillActiveBackground,
+      pillActiveText: pillActiveText ?? this.pillActiveText,
     );
   }
 
@@ -120,15 +173,15 @@ class CustomColors extends ThemeExtension<CustomColors> {
       borderColorNotOpened: Color.lerp(borderColorNotOpened, other.borderColorNotOpened, t),
       background2: Color.lerp(background2, other.background2, t),
       successSnackbar: Color.lerp(successSnackbar, other.successSnackbar, t),
+      urgentAccent: Color.lerp(urgentAccent, other.urgentAccent, t),
+      primaryAccent: Color.lerp(primaryAccent, other.primaryAccent, t),
+      textPrimary: Color.lerp(textPrimary, other.textPrimary, t),
+      mainBackground: Color.lerp(mainBackground, other.mainBackground, t),
+      cardFill: Color.lerp(cardFill, other.cardFill, t),
+      containerSoft: Color.lerp(containerSoft, other.containerSoft, t),
+      cardBorderColor: Color.lerp(cardBorderColor, other.cardBorderColor, t),
+      pillActiveBackground: Color.lerp(pillActiveBackground, other.pillActiveBackground, t),
+      pillActiveText: Color.lerp(pillActiveText, other.pillActiveText, t),
     );
-  }
-
-  /// Returns an instance of [CustomColors] in which the following custom
-  /// colors are harmonized with [dynamic]'s [ColorScheme.primary].
-  ///
-  /// See also:
-  ///   * <https://m3.material.io/styles/color/the-color-system/custom-colors#harmonization>
-  CustomColors harmonized(ColorScheme dynamic) {
-    return copyWith();
   }
 }

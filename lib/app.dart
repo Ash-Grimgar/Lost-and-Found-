@@ -7,20 +7,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lost_and_found/config/route_generator.dart';
 import 'package:lost_and_found/core/presentation/app_global/bloc/app_global_bloc.dart';
 import 'package:lost_and_found/core/presentation/home_controller/bloc/home_controller_bloc.dart';
 import 'package:lost_and_found/core/presentation/home_controller/pages/home_controller_page.dart';
+import 'package:lost_and_found/core/presentation/splash/pages/splash_screen.dart';
 import 'package:lost_and_found/core/presentation/tutorial/pages/tutorial_page.dart';
 import 'package:lost_and_found/features/chat/presentation/pages/chat_page.dart';
 import 'package:lost_and_found/features/claim/presentation/pages/answer_claim_screen.dart';
 import 'package:lost_and_found/features/claim/presentation/pages/claims_screen.dart';
 import 'package:lost_and_found/features/item/presentation/pages/item_page.dart';
 import 'package:lost_and_found/features/item/presentation/pages/notifications_page.dart';
-import 'package:lost_and_found/utils/colors/color_schemes.dart';
-import 'package:lost_and_found/utils/colors/custom_color.dart';
 import 'package:lost_and_found/utils/constants.dart';
+import 'package:lost_and_found/utils/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
 
 import 'features/badges/presentation/bloc/badge_bloc.dart';
@@ -151,9 +150,6 @@ class _Application extends State<App> {
 
           return BlocBuilder<AppGlobalBloc, AppGlobalState>(
             builder: (ctx, state) => DynamicColorBuilder(builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-              ColorScheme lightScheme = lightColorScheme;
-              ColorScheme darkScheme = darkColorScheme;
-
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -163,28 +159,16 @@ class _Application extends State<App> {
                 title: 'Lost and Found',
                 navigatorKey: navigatorKey,
                 themeMode: state.theme,
-                theme: ThemeData(
-                  fontFamily: GoogleFonts.roboto().fontFamily,
-                  useMaterial3: true,
-                  colorScheme: lightScheme,
-                  extensions: [lightCustomColors],
-                  dialogTheme: DialogThemeData(
-                      backgroundColor: lightCustomColors.background2, surfaceTintColor: lightCustomColors.background2),
-                ),
-                darkTheme: ThemeData(
-                  fontFamily: GoogleFonts.roboto().fontFamily,
-                  useMaterial3: true,
-                  colorScheme: darkScheme,
-                  extensions: [darkCustomColors],
-                  dialogTheme: DialogThemeData(
-                      backgroundColor: darkCustomColors.background2, surfaceTintColor: darkCustomColors.background2),
-                ),
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
                 initialRoute: initialRoute,
                 onGenerateInitialRoutes: (route) {
-                  if (route != '/') {
-                    return [MaterialPageRoute(builder: (_) => const InfoScreen())];
-                  } else {
+                  if (route == '/splash') {
+                    return [MaterialPageRoute(builder: (_) => const SplashScreen())];
+                  } else if (route == '/') {
                     return [MaterialPageRoute(builder: (_) => HomeControllerScreen())];
+                  } else {
+                    return [MaterialPageRoute(builder: (_) => const InfoScreen())];
                   }
                 },
                 onGenerateRoute: RouteGenerator.generateRoute,

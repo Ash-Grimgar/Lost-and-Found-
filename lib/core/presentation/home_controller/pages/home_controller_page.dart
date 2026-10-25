@@ -1,19 +1,15 @@
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:lost_and_found/features/badges/presentation/bloc/badge_bloc.dart';
+import 'package:lost_and_found/features/chat/presentation/bloc/inbox/inbox_bloc.dart';
 import 'package:lost_and_found/features/chat/presentation/pages/inbox_page.dart';
 import 'package:lost_and_found/features/item/presentation/bloc/search/search_bloc.dart';
+import 'package:lost_and_found/features/item/presentation/pages/home_page.dart';
+import 'package:lost_and_found/features/item/presentation/pages/search_page.dart';
+import 'package:lost_and_found/features/user/presentation/bloc/user/user_bloc.dart';
+import 'package:lost_and_found/features/user/presentation/pages/user_page.dart';
 import 'package:lost_and_found/utils/colors/custom_color.dart';
-
-import '../../../../features/badges/presentation/bloc/badge_bloc.dart';
-import '../../../../features/chat/presentation/bloc/inbox/inbox_bloc.dart';
-import '../../../../features/item/presentation/pages/fake_insert_page_item.dart';
-import '../../../../features/item/presentation/pages/home_page.dart';
-import '../../../../features/item/presentation/pages/search_page.dart';
-import '../../../../features/user/presentation/bloc/user/user_bloc.dart';
-import '../../../../features/user/presentation/pages/user_page.dart';
-import '../../../../l10n/app_localizations.dart';
 import '../bloc/home_controller_bloc.dart';
 
 class HomeControllerScreen extends StatelessWidget {
@@ -23,82 +19,204 @@ class HomeControllerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List pages = [
+    // Pages corresponding to tab indices:
+    // 0: Home, 1: Search, 3: Inbox, 4: Profile
+    final List<Widget> pages = [
       const HomeScreen(),
       const SearchScreen(),
-      const FakeInsertPageItem(),
+      const SizedBox.shrink(), // Index 2 reserved for center button action
       const InboxScreen(),
       const UserScreen(),
     ];
+
+    final customColors = Theme.of(context).extension<CustomColors>() ?? lightCustomColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final mintColor = customColors.primaryAccent ?? const Color(0xFF52C46A);
+    final secondaryTextColor = customColors.secondaryTextColor ?? const Color(0xFF8F99A8);
+    final navBg = customColors.cardFill ?? (isDark ? const Color(0xFF131A2B) : const Color(0xFFFFFFFF));
+    final borderColor = customColors.cardBorderColor ?? (isDark ? const Color(0xFF1F2B45) : const Color(0xFFEDE8E1));
 
     return BlocBuilder<BadgeBloc, BadgeState>(
       builder: (badgeCtx, badgeState) => BlocBuilder<HomeControllerBloc, HomeControllerState>(
         builder: (ctx, state) => BlocBuilder<SearchBloc, SearchState>(
           builder: (searchCtx, searchState) {
+            // Ensure tabIndex is safe
+            final currentTab = (state.tabIndex >= 0 && state.tabIndex < pages.length) ? state.tabIndex : 0;
+
+            void selectTab(int index) {
+              if (index < hasPageBeenInitialized.length && !hasPageBeenInitialized[index]) {
+                if (index == 3) {
+                  ctx.read<InboxBloc>().add(const InboxEvent.inboxContentCreated());
+                } else if (index == 4) {
+                  ctx.read<UserBloc>().add(const UserEvent.contentCreated());
+                }
+                hasPageBeenInitialized[index] = true;
+              }
+              ctx.read<HomeControllerBloc>().add(HomeControllerEvent.tabChanged(index));
+            }
+
             return Scaffold(
-              appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(0),
-                child: AppBar(
-                  backgroundColor:
-                      state.tabIndex == 4 || (state.tabIndex == 1 && searchState.pageState == SearchPageState.resultPage)
-                          ? Theme.of(context).extension<CustomColors>()!.background2
-                          : Theme.of(context).colorScheme.background,
-                  elevation: 0,
-                  surfaceTintColor: Theme.of(context).colorScheme.outline,
-                  shadowColor: Theme.of(context).colorScheme.outline,
-                  iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              body: SafeArea(
+                bottom: false,
+                child: IndexedStack(
+                  index: currentTab == 2 ? 0 : currentTab,
+                  children: pages,
                 ),
               ),
-              backgroundColor: Theme.of(context).colorScheme.background,
-              body: SafeArea(child: pages[state.tabIndex]),
-              bottomNavigationBar: BottomNavigationBar(
-                showSelectedLabels: true,
-                type: BottomNavigationBarType.fixed,
-                showUnselectedLabels: true,
-                currentIndex: state.tabIndex,
-                onTap: (index) {
-                  if (!hasPageBeenInitialized[index]) {
-                    switch (index) {
-                      case 3:
-                        ctx.read<InboxBloc>().add(const InboxEvent.inboxContentCreated());
-                      case 4:
-                        ctx.read<UserBloc>().add(const UserEvent.contentCreated());
-                    }
+              bottomNavigationBar: Container(
+                decoration: BoxDecoration(
+                  color: navBg,
+                  border: Border(
+                    top: BorderSide(color: borderColor, width: 1.0),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
+                      blurRadius: 16,
+                      offset: const Offset(0, -4),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.only(top: 8, bottom: 16, left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // Tab 1: Home
+                    _buildNavItem(
+                      context: context,
+                      icon: Icons.home_rounded,
+                      label: "Home",
+                      isSelected: currentTab == 0,
+                      onTap: () => selectTab(0),
+                      badgeContent: badgeState.unreadReceivedClaims > 0 || badgeState.unreadNews > 0,
+                      activeColor: mintColor,
+                      inactiveColor: secondaryTextColor,
+                    ),
 
-                    hasPageBeenInitialized[index] = true;
-                  }
+                    // Tab 2: Search
+                    _buildNavItem(
+                      context: context,
+                      icon: Icons.search_rounded,
+                      label: "Search",
+                      isSelected: currentTab == 1,
+                      onTap: () => selectTab(1),
+                      activeColor: mintColor,
+                      inactiveColor: secondaryTextColor,
+                    ),
 
-                  ctx.read<HomeControllerBloc>().add(HomeControllerEvent.tabChanged(index));
-                },
-                backgroundColor: Theme.of(context).extension<CustomColors>()!.background2,
-                selectedItemColor: Theme.of(context).colorScheme.primary,
-                unselectedItemColor: Theme.of(context).colorScheme.outline,
-                items: [
-                  BottomNavigationBarItem(
-                      icon: badges.Badge(
-                        position: badges.BadgePosition.topEnd(top: 0, end: -1),
-                        showBadge: badgeState.unreadReceivedClaims > 0 || badgeState.unreadNews > 0,
-                        child: const Icon(Icons.home),
+                    // Floating Center "+" Action Button in Mint Green
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pushNamed("/insert"),
+                      child: Container(
+                        width: 52,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: mintColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: mintColor.withOpacity(0.4),
+                              blurRadius: 14,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.add_rounded,
+                            size: 32,
+                            color: isDark ? const Color(0xFF0B101D) : Colors.white,
+                          ),
+                        ),
                       ),
-                      label: AppLocalizations.of(context)!.homeBottomBarTab),
-                  BottomNavigationBarItem(
-                      icon: const Icon(Icons.search), label: AppLocalizations.of(context)!.searchBottomBarTab),
-                  BottomNavigationBarItem(
-                      icon: const Icon(Icons.add_circle_outline_outlined),
-                      label: AppLocalizations.of(context)!.insertBottomBarTab),
-                  BottomNavigationBarItem(
-                      icon: badges.Badge(
-                        showBadge: badgeState.hasUnreadChats,
-                        position: badges.BadgePosition.topEnd(top: 0, end: -1),
-                        child: const Icon(Icons.mail),
-                      ),
-                      label: AppLocalizations.of(context)!.inboxBottomBarTab),
-                  BottomNavigationBarItem(
-                      icon: const Icon(Icons.person), label: AppLocalizations.of(context)!.profileBottomBarTab),
-                ],
+                    ),
+
+                    // Tab 3: Inbox
+                    _buildNavItem(
+                      context: context,
+                      icon: Icons.chat_bubble_outline_rounded,
+                      label: "Inbox",
+                      isSelected: currentTab == 3,
+                      onTap: () => selectTab(3),
+                      badgeContent: badgeState.hasUnreadChats,
+                      activeColor: mintColor,
+                      inactiveColor: secondaryTextColor,
+                    ),
+
+                    // Tab 4: Profile
+                    _buildNavItem(
+                      context: context,
+                      icon: Icons.person_outline_rounded,
+                      label: "Profile",
+                      isSelected: currentTab == 4,
+                      onTap: () => selectTab(4),
+                      activeColor: mintColor,
+                      inactiveColor: secondaryTextColor,
+                    ),
+                  ],
+                ),
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required Color activeColor,
+    required Color inactiveColor,
+    bool badgeContent = false,
+  }) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: SizedBox(
+        width: 60,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            badges.Badge(
+              showBadge: badgeContent,
+              position: badges.BadgePosition.topEnd(top: -3, end: -4),
+              badgeStyle: badges.BadgeStyle(
+                badgeColor: activeColor,
+                padding: const EdgeInsets.all(4),
+              ),
+              child: Icon(
+                icon,
+                size: 24,
+                color: isSelected ? activeColor : inactiveColor,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                color: isSelected ? activeColor : inactiveColor,
+              ),
+            ),
+            const SizedBox(height: 2),
+            // Active indicator dot
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: 3,
+              width: isSelected ? 16 : 0,
+              decoration: BoxDecoration(
+                color: activeColor,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ],
         ),
       ),
     );
